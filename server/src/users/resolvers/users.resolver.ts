@@ -1,10 +1,50 @@
-import { Resolver, Query } from '@nestjs/graphql';
-import { User } from '../models/user';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { User } from '../entities/user.entity';
+import CreateUserInput from '../types/CreateUserInput';
+import UpdateUserInput from '../types/UpdateUserInput';
+import { UsersService } from '../users.service';
 
 @Resolver(() => User)
 export class UsersResolver {
-  @Query(() => String)
-  getHello(): string {
-    return 'Hello world';
+  constructor(private usersService: UsersService) {}
+
+  @Query(() => [User])
+  async getUsers(): Promise<User[]> {
+    const users = await this.usersService.findAll();
+
+    return users;
+  }
+
+  @Query(() => User)
+  async getUser(@Args('id') id: number): Promise<User> {
+    const user = await this.usersService.findOne(id);
+
+    return user;
+  }
+
+  @Mutation(() => User)
+  async registerUser(
+    @Args('createUserInput') createUserInput: CreateUserInput,
+  ): Promise<User> {
+    const user: User = await this.usersService.create(createUserInput);
+
+    return user;
+  }
+
+  @Mutation(() => User)
+  async updateUser(
+    @Args('id') id: number,
+    @Args('updateUserInput') updateUserInput: UpdateUserInput,
+  ) {
+    const user: User = await this.usersService.update(id, updateUserInput);
+
+    return user;
+  }
+
+  @Mutation(() => User)
+  async removeUser(@Args('id') id: number) {
+    const result = await this.usersService.remove(id);
+
+    return result;
   }
 }

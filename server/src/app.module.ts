@@ -7,7 +7,7 @@ import { UsersModule } from './users/users.module';
   imports: [
     // External modules
     GraphQLModule.forRoot({ autoSchemaFile: true }),
-    TypeOrmModule.forRoot(),
+    TypeOrmModule.forRoot({ autoLoadEntities: true }),
 
     // Internal modules
     UsersModule,
