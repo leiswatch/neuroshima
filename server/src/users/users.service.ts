@@ -1,9 +1,4 @@
-import {
-  HttpException,
-  HttpStatus,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { hash } from 'argon2';
 import { Repository } from 'typeorm';
@@ -19,9 +14,7 @@ export class UsersService {
   ) {}
 
   async findAll(): Promise<User[]> {
-    const users: User[] = await this.usersRepository.find();
-
-    return users;
+    return await this.usersRepository.find();
   }
 
   async findOne(id: number): Promise<User> {
@@ -65,10 +58,7 @@ export class UsersService {
 
       return user;
     } catch (error) {
-      throw new HttpException(
-        'Internal server error',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      throw new HttpException('Internal server error', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
@@ -82,10 +72,7 @@ export class UsersService {
     try {
       await this.usersRepository.delete(id);
     } catch (error) {
-      throw new HttpException(
-        'Internal server error',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      throw new HttpException('Internal server error', HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     return user;
