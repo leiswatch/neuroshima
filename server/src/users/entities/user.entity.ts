@@ -27,13 +27,13 @@ export class User {
 
   @Field(() => Boolean)
   @Column({ default: true })
-  isActive: boolean;
+  isActive!: boolean;
 
   @Field(() => String)
   @CreateDateColumn()
-  createdAt: Date;
+  createdAt!: Date;
 
   @Field(() => String)
   @UpdateDateColumn()
-  updatedAt: Date;
+  updatedAt!: Date;
 }
