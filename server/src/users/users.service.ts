@@ -2,9 +2,9 @@ import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestj
 import { InjectRepository } from '@nestjs/typeorm';
 import { hash } from 'argon2';
 import { Repository } from 'typeorm';
+import CreateUserInput from './dto/CreateUserInput';
+import UpdateUserInput from './dto/UpdateUserInput';
 import { User } from './entities/user.entity';
-import CreateUserInput from './types/CreateUserInput';
-import UpdateUserInput from './types/UpdateUserInput';
 
 @Injectable()
 export class UsersService {
@@ -28,13 +28,12 @@ export class UsersService {
   }
 
   async create(userInput: CreateUserInput): Promise<User> {
-    const { username, email, password } = userInput;
+    const { password, ...rest } = userInput;
     const hashedPassword: string = await hash(password);
 
     const user: User = this.usersRepository.create({
-      username,
-      email,
       password: hashedPassword,
+      ...rest,
     });
 
     await this.usersRepository.save(user);
