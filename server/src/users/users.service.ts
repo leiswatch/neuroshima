@@ -1,10 +1,10 @@
 import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { hash } from 'argon2';
+import CreateUserInput from 'src/users/dto/CreateUserInput';
+import UpdateUserInput from 'src/users/dto/UpdateUserInput';
+import { User } from 'src/users/entities/user.entity';
 import { Repository } from 'typeorm';
-import CreateUserInput from './dto/CreateUserInput';
-import UpdateUserInput from './dto/UpdateUserInput';
-import { User } from './entities/user.entity';
 
 @Injectable()
 export class UsersService {
@@ -14,7 +14,7 @@ export class UsersService {
   ) {}
 
   async findAll(): Promise<User[]> {
-    return await this.usersRepository.find();
+    return await this.usersRepository.find({});
   }
 
   async findOne(id: number): Promise<User> {
@@ -23,6 +23,12 @@ export class UsersService {
     if (!user) {
       throw new NotFoundException('User not found.');
     }
+
+    return user;
+  }
+
+  async findByUsername(username: string): Promise<User> {
+    const user: User = await this.usersRepository.findOne({ where: { username } });
 
     return user;
   }
